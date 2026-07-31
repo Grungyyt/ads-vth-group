@@ -3,67 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Publicité</title>
+<title>Publicité - VTH Storage</title>
 
 <style>
-body{
-    margin:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    overflow:hidden;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-video{
-    width:100%;
-    height:100%;
-    object-fit:contain;
+body {
+    background: #000;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
 }
 
-#continue{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    display:none;
-    padding:12px 24px;
-    border:none;
-    border-radius:8px;
-    background:#0078ff;
-    color:#fff;
-    font-size:16px;
-    cursor:pointer;
+#videoContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#adVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+#skipOverlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,.7);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    background: #000;
 }
 </style>
 </head>
 <body>
 
-<video id="adVideo" controls autoplay>
-    https://storage.vth-mc.fr/pub/2026/cloud.mp4
-</video>
+<div id="videoContainer">
 
-<button id="continue">Continuer</button>
+    <div id="loading">
+        Chargement de la publicité...
+    </div>
+
+    <video
+        id="adVideo"
+        autoplay
+        controls
+        playsinline
+    >
+        <source src="https://storage.vth-mc.fr/pub/2026/cloud.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas les vidéos HTML5.
+    </video>
+
+    <div id="skipOverlay">
+        Publicité en cours...
+    </div>
+
+</div>
 
 <script>
 const params = new URLSearchParams(window.location.search);
 const redirectUrl = params.get("redirect") || "/";
 
 const video = document.getElementById("adVideo");
-const continueBtn = document.getElementById("continue");
+const loading = document.getElementById("loading");
+const overlay = document.getElementById("skipOverlay");
 
-// Son activé
-video.muted = false;
 video.volume = 1;
+video.muted = false;
 
-// Fin de la vidéo
-video.addEventListener("ended", () => {
-    continueBtn.style.display = "block";
-    window.location.href = redirectUrl;
+video.addEventListener("loadeddata", () => {
+    loading.style.display = "none";
+
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            overlay.innerText = "Cliquez sur la vidéo pour activer le son";
+        });
+    }
 });
 
-// Bouton manuel
-continueBtn.addEventListener("click", () => {
+video.addEventListener("click", () => {
+    video.muted = false;
+    video.volume = 1;
+    video.play();
+});
+
+video.addEventListener("ended", () => {
+    overlay.innerText = "Redirection...";
     window.location.href = redirectUrl;
 });
 </script>
