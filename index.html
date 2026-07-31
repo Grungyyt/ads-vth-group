@@ -3,104 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supportez le service</title>
+    <title>VTH Storage</title>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
         body {
-            background: #ffffff;
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            text-align: center;
+            background: #ffffff;
+            font-family: Arial, sans-serif;
         }
 
         .container {
-            max-width: 600px;
-            padding: 40px;
+            text-align: center;
         }
 
         .logo {
-            width: 180px;
-            margin-bottom: 25px;
-        }
-
-        h1 {
-            color: #222;
-            margin-bottom: 15px;
+            width: 200px;
+            margin-bottom: 20px;
         }
 
         p {
-            color: #555;
+            color: #333;
             font-size: 18px;
-            line-height: 1.6;
-        }
-
-        .countdown {
-            margin-top: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #0078d4;
-        }
-
-        .continue-btn {
-            display: none;
-            margin-top: 25px;
-            padding: 12px 25px;
-            background: #0078d4;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .continue-btn:hover {
-            background: #005fa3;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    /logo.png
-
-    <h1>Merci de votre soutien</h1>
-
-    <p>
-        Ce service nous permet de continuer à financer nos infrastructures,
-        notre stockage et le développement de nos services gratuitement.
-    </p>
-
-    <div class="countdown" id="countdown">5</div>
-
-    /
-        Continuer vers le site
-    </a>
-</div>
-
-<script>
-    let timeLeft = 5;
-    const countdown = document.getElementById('countdown');
-    const btn = document.getElementById('continueBtn');
-
-    const timer = setInterval(() => {
-        timeLeft--;
-        countdown.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            countdown.style.display = 'none';
-            btn.style.display = 'inline-block';
-        }
-    }, 1000);
-</script>
+    <div class="container">
+        logo.png
+        <p>Ce service permet de nous financer.</p>
+    </div>
 
 </body>
 </html>
