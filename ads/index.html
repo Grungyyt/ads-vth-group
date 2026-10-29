@@ -104,14 +104,10 @@ const startScreen = document.getElementById("start-screen");
 const startBtn = document.getElementById("start-btn");
 const adLabel = document.getElementById("ad-label");
 
+let isStarted = false;
+
 startBtn.addEventListener("click", async () => {
-
-    try {
-        if(document.documentElement.requestFullscreen){
-            document.documentElement.requestFullscreen();
-        }
-    } catch(e){}
-
+    isStarted = true;
     startScreen.style.display = "none";
     adLabel.style.display = "block";
 
@@ -120,6 +116,17 @@ startBtn.addEventListener("click", async () => {
     video.volume = 1;
 
     await video.play();
+});
+
+// Pause / Reprise automatique quand on change d'onglet
+document.addEventListener("visibilitychange", () => {
+    if (!isStarted) return;
+
+    if (document.hidden) {
+        video.pause();
+    } else {
+        video.play();
+    }
 });
 
 video.addEventListener("ended", () => {
