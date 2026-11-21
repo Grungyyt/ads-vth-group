@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -105,13 +104,19 @@ video {
 
     <video id="video" playsinline preload="auto">
         <source
-            src="https://storage.vth-mc.fr/pub/2026/1.mp4"
+            src="https://storage.vth-mc.fr/vth-studios/vid%C3%A9o/1121.mp4"
             type="video/mp4">
     </video>
 
 </div>
 
 <script>
+// Les deux publicités, jouées l'une après l'autre.
+const ADS = [
+    "https://storage.vth-mc.fr/vth-studios/vid%C3%A9o/1121.mp4",
+    "https://storage.vth-mc.fr/pub/2026/1.mp4"
+];
+
 const params = new URLSearchParams(window.location.search);
 
 const token = params.get("token");
@@ -147,6 +152,16 @@ try {
 
 let started = false;
 let completed = false;
+let current = 0;
+
+// charge la i-ème pub et met à jour le label "Pub 1/2"
+function loadAd(index) {
+    current = index;
+    video.pause();
+    video.src = ADS[index];
+    video.load();
+    adLabel.textContent = "Pub " + (index + 1) + "/" + ADS.length;
+}
 
 startBtn.addEventListener("click", async () => {
     if (started) return;
@@ -155,6 +170,7 @@ startBtn.addEventListener("click", async () => {
     startScreen.style.display = "none";
     adLabel.style.display = "block";
 
+    loadAd(0);
     video.style.display = "block";
     video.muted = false;
     video.volume = 1;
@@ -180,11 +196,25 @@ document.addEventListener("visibilitychange", () => {
 });
 
 video.addEventListener("ended", async () => {
+    // encore une pub à jouer ?
+    if (current + 1 < ADS.length) {
+        loadAd(current + 1);
+        try {
+            await video.play();
+        } catch {
+            completed = false;
+            status.textContent =
+                "Impossible de lancer la vidéo suivante. Rechargez la page pour réessayer.";
+        }
+        return;
+    }
+
     if (completed) return;
 
     completed = true;
     video.pause();
 
+    video.style.display = "none";
     startScreen.style.display = "flex";
     startBtn.style.display = "none";
     status.textContent = "Publicité terminée. Validation en cours…";
