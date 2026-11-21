@@ -134,9 +134,16 @@ let destination;
 try {
     destination = new URL(redirect || "");
 
+    // Redirection autorisée : le panel officiel en HTTPS, ou une IP de panel
+    // de confiance (http accepté) — le visiteur est renvoyé vers l'IP d'où il vient.
+    const isOfficial =
+        destination.protocol === "https:" &&
+        destination.hostname === "panel.serv-vth.fun";
+    const isTrustedIp =
+        destination.hostname === "100.123.228.43";
+
     if (
-        destination.protocol !== "https:" ||
-        destination.hostname !== "panel.serv-vth.fun" ||
+        (!isOfficial && !isTrustedIp) ||
         !token ||
         !/^[a-f0-9]{64}$/i.test(token) ||
         !serverId ||
