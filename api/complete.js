@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
     res.setHeader("Cache-Control", "no-store");
 
@@ -39,8 +38,15 @@ export default async function handler(req, res) {
     try {
         callback = new URL(callbackUrl);
 
-        if (callback.protocol !== "https:") {
-            throw new Error("HTTPS required");
+        // HTTPS exigé pour le domaine officiel ; une IP de panel de confiance
+        // est acceptée en HTTP (ex. http://100.123.228.43/vth/ads/complete).
+        const isOfficial =
+            callback.protocol === "https:" &&
+            callback.hostname === "panel.serv-vth.fun";
+        const isTrustedIp = callback.hostname === "100.123.228.43";
+
+        if (!isOfficial && !isTrustedIp) {
+            throw new Error("Untrusted callback host");
         }
     } catch {
         return res.status(500).json({
